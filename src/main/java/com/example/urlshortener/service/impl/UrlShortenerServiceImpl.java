@@ -5,6 +5,7 @@ import com.example.urlshortener.dto.response.ShortenUrlResponse;
 import com.example.urlshortener.entity.UrlMapping;
 import com.example.urlshortener.exception.AliasAlreadyExistsException;
 import com.example.urlshortener.exception.CodeGenerationException;
+import com.example.urlshortener.exception.UrlNotFoundException;
 import com.example.urlshortener.helper.AliasValidator;
 import com.example.urlshortener.helper.ShortCodeGenerator;
 import com.example.urlshortener.helper.ShortUrlBuilder;
@@ -49,6 +50,13 @@ public class UrlShortenerServiceImpl implements UrlShortenerService {
             return shortenWithGeneratedCode(normalizedUrl);
         }
         return shortenWithCustomAlias(normalizedUrl, alias);
+    }
+
+    @Override
+    public String getOriginalUrl(String code) {
+        return urlMappingRepository.findByCode(code)
+                .map(UrlMapping::getOriginalUrl)
+                .orElseThrow(() -> new UrlNotFoundException(code));
     }
 
     private ShortenUrlResult shortenWithGeneratedCode(String normalizedUrl) {
