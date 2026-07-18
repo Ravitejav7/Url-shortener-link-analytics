@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: url-shortener
+    runtime: docker
+    plan: free
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: APP_BASE_URL
+        sync: false

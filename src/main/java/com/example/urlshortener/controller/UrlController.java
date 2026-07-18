@@ -1,6 +1,7 @@
 package com.example.urlshortener.controller;
 
 import java.net.URI;
+import java.util.Map;
 
 import com.example.urlshortener.dto.request.ShortenUrlRequest;
 import com.example.urlshortener.dto.response.ShortenUrlResponse;
@@ -25,6 +26,19 @@ public class UrlController {
     public UrlController(UrlShortenerService urlShortenerService, AnalyticsService analyticsService) {
         this.urlShortenerService = urlShortenerService;
         this.analyticsService = analyticsService;
+    }
+
+    @GetMapping("/")
+    public Map<String, Object> status() {
+        return Map.of(
+                "service", "URL Shortener & Link Analytics",
+                "status", "running",
+                "endpoints", Map.of(
+                        "shorten", "POST /shorten",
+                        "redirect", "GET /{code}",
+                        "analytics", "GET /analytics/{code}"
+                )
+        );
     }
 
     @PostMapping("/shorten")

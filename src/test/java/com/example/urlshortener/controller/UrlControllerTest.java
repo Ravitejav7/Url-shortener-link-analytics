@@ -39,6 +39,15 @@ class UrlControllerTest {
     }
 
     @Test
+    void rootReturnsApiStatus() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.service").value("URL Shortener & Link Analytics"))
+                .andExpect(jsonPath("$.status").value("running"))
+                .andExpect(jsonPath("$.endpoints.shorten").value("POST /shorten"));
+    }
+
+    @Test
     void shortenReturnsCreatedForNewMapping() throws Exception {
         when(urlShortenerService.shorten(org.mockito.ArgumentMatchers.any()))
                 .thenReturn(new ShortenUrlResult(true,
@@ -62,6 +71,15 @@ class UrlControllerTest {
                         .content("{\"url\":\"javascript:alert(1)\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Only http and https URLs are supported"));
+    }
+
+    @Test
+    void malformedJsonReturnsBadRequest() throws Exception {
+        mockMvc.perform(post("/shorten")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{url:\"https://example.com\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Request body must be valid JSON"));
     }
 
     @Test

@@ -1,7 +1,7 @@
 target/
 .m2/
 .tools/
+.git/
 .idea/
 .vscode/
-.env
 *.log

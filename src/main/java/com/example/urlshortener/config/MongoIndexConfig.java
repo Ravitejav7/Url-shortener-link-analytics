@@ -16,13 +16,13 @@ public class MongoIndexConfig {
     CommandLineRunner ensureMongoIndexes(MongoTemplate mongoTemplate) {
         return args -> {
             mongoTemplate.indexOps(UrlMapping.class)
-                    .ensureIndex(new Index().on("code", Sort.Direction.ASC).unique());
+                    .createIndex(new Index().on("code", Sort.Direction.ASC).unique());
             mongoTemplate.indexOps(UrlMapping.class)
-                    .ensureIndex(new Index().on("normalizedUrl", Sort.Direction.ASC));
+                    .createIndex(new Index().on("normalizedUrl", Sort.Direction.ASC));
             mongoTemplate.indexOps(ClickEvent.class)
-                    .ensureIndex(new Index().on("code", Sort.Direction.ASC));
+                    .createIndex(new Index().on("code", Sort.Direction.ASC));
             mongoTemplate.indexOps(ClickEvent.class)
-                    .ensureIndex(new Index()
+                    .createIndex(new Index()
                             .on("code", Sort.Direction.ASC)
                             .on("clickedAt", Sort.Direction.DESC));
         };
